@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BossSync", "BossSync.csproj", "{2250EC30-3C4D-47E0-B9DB-5D70933FD0EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2250EC30-3C4D-47E0-B9DB-5D70933FD0EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2250EC30-3C4D-47E0-B9DB-5D70933FD0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2250EC30-3C4D-47E0-B9DB-5D70933FD0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2250EC30-3C4D-47E0-B9DB-5D70933FD0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2D98C9D5-E352-414F-8BB1-633D5E76AF1F}
+	EndGlobalSection
+EndGlobal
