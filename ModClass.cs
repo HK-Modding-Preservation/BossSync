@@ -10,27 +10,18 @@ namespace BossSync
     public class BossSync : Mod
     {
         internal static BossSync Instance;
-
-        //public override List<ValueTuple<string, string>> GetPreloadNames()
-        //{
-        //    return new List<ValueTuple<string, string>>
-        //    {
-        //        new ValueTuple<string, string>("White_Palace_18", "White Palace Fly")
-        //    };
-        //}
-
-        //public BossSync() : base("BossSync")
-        //{
-        //    Instance = this;
-        //}
-
-        public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
+        new public string GetName() => "My First Mod";
+        public override string GetVersion() => "v1";
+        public override void Initialize()
         {
-            Log("Initializing");
-
-            Instance = this;
-
-            Log("Initialized");
+            ModHooks.HeroUpdateHook += OnHeroUpdate;
+        }
+        public void OnHeroUpdate()
+        {
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                Log("Key Pressed");
+            }
         }
     }
 }
