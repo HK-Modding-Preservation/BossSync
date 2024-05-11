@@ -52,11 +52,17 @@
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
   <ItemGroup>
-	  <Reference Include="MenuChanger">
-		  <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
-	  </Reference>
-	  <Reference Include="RandomizerMod">
-		  <HintPath>$(HollowKnightRefs)\Mods\Randomizer 4\RandomizerMod.dll</HintPath>
+	<Reference Include="RandoSettingsManager">
+	  <HintPath>$(HollowKnightRefs)\Mods\RandoSettingsManager\RandoSettingsManager.dll</HintPath>
+	</Reference>
+	<Reference Include="MenuChanger">
+	  <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
+	</Reference>
+	<Reference Include="RandomizerMod">
+	  <HintPath>$(HollowKnightRefs)\Mods\Randomizer 4\RandomizerMod.dll</HintPath>
+	</Reference>
+	  <Reference Include="RandomizerCore">
+		  <HintPath>$(HollowKnightRefs)\Mods\RandomizerCore\RandomizerCore.dll</HintPath>
 	  </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
