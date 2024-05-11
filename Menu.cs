@@ -3,24 +3,26 @@ using MenuChanger.Extensions;
 using MenuChanger.MenuElements;
 using MenuChanger.MenuPanels;
 using RandomizerMod.Menu;
+using RandomizerMod.Settings;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using static RandomizerMod.Localization;
+using static UnityEngine.GridBrushBase;
 
-namespace RandoVanillaTracker
+namespace BossTracker
 {
-    // More or less copied from flibber's RandoPlus
+    // More or less copied from RandoVanillaTracker/flibber's RandoPlus
     internal class Menu
     {
-        internal MenuPage rvtPage;
-        internal MenuLabel rvtPageTitle;
-        internal MenuElementFactory<GlobalSettings> rvtMEF;
-        internal GridItemPanel rvtGIP;
+        internal MenuPage btPage;
+        internal MenuLabel btPageTitle;
+        internal MenuElementFactory<GlobalSettings> btMEF;
+        internal GridItemPanel btGIP;
 
-        internal List<ToggleButton> rvtInteropButtons;
-        internal SmallButton JumpToRVTButton;
+        internal List<ToggleButton> btInteropButtons;
+        internal SmallButton JumpToBTButton;
 
         internal static Menu Instance { get; private set; }
 
@@ -37,7 +39,7 @@ namespace RandoVanillaTracker
 
         private static bool HandleButton(MenuPage landingPage, out SmallButton button)
         {
-            button = Instance.JumpToRVTButton;
+            button = Instance.JumpToBTButton;
             return true;
         }
 
@@ -45,55 +47,58 @@ namespace RandoVanillaTracker
 
         private Menu(MenuPage landingPage)
         {
-            rvtPage = new MenuPage(Localize("RandoVanillaTracker"), landingPage);
-            rvtPageTitle = new MenuLabel(rvtPage, "Select vanilla placements to track", MenuLabel.Style.Title);
-            rvtPageTitle.MoveTo(new Vector2(0, 400));
-            rvtMEF = new(rvtPage, RVT.GS);
+            btPage = new MenuPage(Localize("Boss Tracker"), landingPage);
+            btPageTitle = new MenuLabel(btPage, "Select Boss Tracker", MenuLabel.Style.Title);
+            btPageTitle.MoveTo(new Vector2(0, 400));
+            btMEF = new (btPage, BossTracker.GS);
 
-            rvtMEF.ElementLookup["Charms"].SelfChanged += CostFixes.Other_SelfChanged;
-            rvtMEF.ElementLookup["Relics"].SelfChanged += CostFixes.Other_SelfChanged;
-            rvtMEF.ElementLookup["PaleOre"].SelfChanged += CostFixes.Other_SelfChanged;
-            rvtMEF.ElementLookup["RancidEggs"].SelfChanged += CostFixes.Other_SelfChanged;
-            rvtMEF.ElementLookup["MaskShards"].SelfChanged += CostFixes.Other_SelfChanged;
+            //rvtMEF.ElementLookup["Charms"].SelfChanged += CostFixes.Other_SelfChanged;
+            //rvtMEF.ElementLookup["Relics"].SelfChanged += CostFixes.Other_SelfChanged;
+            //rvtMEF.ElementLookup["PaleOre"].SelfChanged += CostFixes.Other_SelfChanged;
+            //rvtMEF.ElementLookup["RancidEggs"].SelfChanged += CostFixes.Other_SelfChanged;
+            //rvtMEF.ElementLookup["MaskShards"].SelfChanged += CostFixes.Other_SelfChanged;
 
             ConstructInteropButtons();
-            rvtGIP = new(rvtPage, new Vector2(0, 300), 4, 50f, 400f, true, rvtMEF.Elements.Concat(rvtInteropButtons).ToArray());
-            Localize(rvtMEF);
+            btGIP = new(btPage, new Vector2(0, 300), 4, 50f, 400f, true, btMEF.Elements.Concat(btInteropButtons).ToArray());
+            Localize(btMEF);
 
-            foreach (IValueElement e in rvtMEF.Elements)
+            foreach (IValueElement e in btMEF.Elements)
             {
                 e.SelfChanged += obj => SetTopLevelButtonColor();
             }
 
-            foreach (ToggleButton b in rvtInteropButtons)
+            foreach (ToggleButton b in btInteropButtons)
             {
                 b.SelfChanged += obj => SetTopLevelButtonColor();
             }
 
-            JumpToRVTButton = new(landingPage, Localize("RandoVanillaTracker"));
-            JumpToRVTButton.AddHideAndShowEvent(landingPage, rvtPage);
+            JumpToBTButton = new(landingPage, Localize("Boss Tracker"));
+            JumpToBTButton.AddHideAndShowEvent(landingPage, btPage);
             SetTopLevelButtonColor();
         }
 
         private void ConstructInteropButtons()
         {
-            rvtInteropButtons = new();
+            btInteropButtons = new();
 
-            foreach (string pool in RVT.Instance.Interops.Keys)
-            {
-                ToggleButton button = new(rvtPage, pool);
-                button.SetValue(RVT.GS.trackInteropPool[pool]);
-                button.SelfChanged += b => RVT.GS.trackInteropPool[pool] = (bool)b.Value;
+            ToggleButton button = new(btPage, "Track False Knight");
+            btInteropButtons.Add(button);
 
-                rvtInteropButtons.Add(button);
-            }
+            //foreach (string pool in RVT.Instance.Interops.Keys)
+            //{
+            //    ToggleButton button = new(rvtPage, pool);
+            //    button.SetValue(RVT.GS.trackInteropPool[pool]);
+            //    button.SelfChanged += b => RVT.GS.trackInteropPool[pool] = (bool)b.Value;
+
+            //    rvtInteropButtons.Add(button);
+            //}
         }
 
         private void SetTopLevelButtonColor()
         {
-            if (JumpToRVTButton != null)
+            if (JumpToBTButton != null)
             {
-                JumpToRVTButton.Text.color = rvtMEF.Elements.Any(e => e.Value is true) || rvtInteropButtons.Any(b => b.Value is true)
+                JumpToBTButton.Text.color = btMEF.Elements.Any(e => e.Value is true) || btInteropButtons.Any(b => b.Value is true)
                     ? Colors.TRUE_COLOR : Colors.DEFAULT_COLOR;
             }
         }
