@@ -7,9 +7,9 @@ using UObject = UnityEngine.Object;
 
 namespace BossSync
 {
-    public class BossSync : Mod
+    public class BossTracker : Mod
     {
-        internal static BossSync Instance;
+        internal static BossTracker Instance;
         new public string GetName() => "BossSync";
         public override string GetVersion() => "v1";
 
