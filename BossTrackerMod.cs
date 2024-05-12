@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UObject = UnityEngine.Object;
 
-namespace BossTracker
+namespace BossTrackerMod
 {
-    public class BossTracker : Mod, IGlobalSettings<GlobalSettings>
+    public class BossTrackerMod : Mod, IGlobalSettings<GlobalSettings>
     {
-        internal static BossTracker Instance;
-        public BossTracker()
+        internal static BossTrackerMod Instance;
+        public BossTrackerMod()
         {
             Instance = this;
         }
@@ -25,13 +25,17 @@ namespace BossTracker
 
         internal Dictionary<string, Func<List<VanillaDef>>> Interops = new();
 
+        public BossSync BossSync;
+
         public override void Initialize()
         {
-            if (ModHooks.GetMod("Randomizer 4") is not Mod || ModHooks.GetMod("ItemSync") is not Mod) return;
+           // if (ModHooks.GetMod("ItemSync") is not Mod) return;
+
+            BossSync = new BossSync();
 
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            ModHooks.OnReceiveDeathEventHook += OnEnemyDeath;
-            //Menu.Hook();
+            //ModHooks.OnReceiveDeathEventHook += OnEnemyDeath;
+            Menu.Hook();
             //Tracker.Hook();
 
             //if (ModHooks.GetMod("RandoSettingsManager") is not null)

@@ -73,6 +73,9 @@
 	      <Reference Include="MultiWorldLib">
       <HintPath>$(HollowKnightRefs)\Mods\MultiWorldLib\MultiWorldLib.dll</HintPath>
     </Reference>
+	  <Reference Include="MapChanger">
+      <HintPath>$(HollowKnightRefs)\Mods\MapChanger\MapChanger.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>

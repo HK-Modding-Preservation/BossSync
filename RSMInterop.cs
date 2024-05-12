@@ -3,12 +3,12 @@ using MenuChanger.MenuElements;
 using RandoSettingsManager;
 using RandoSettingsManager.SettingsManagement;
 using RandoSettingsManager.SettingsManagement.Versioning;
-using BossTracker;
+using BossTrackerMod;
 
 
 // More or less copied from RandoVanillaTracker
 
-namespace BossTracker
+namespace BossTrackerMod
 {
     internal static class RSMInterop
     {
@@ -20,10 +20,10 @@ namespace BossTracker
 
     internal class RVTSettingsProxy : RandoSettingsProxy<GlobalSettings, string>
     {
-        public override string ModKey => BossTracker.Instance.GetName();
+        public override string ModKey => BossTrackerMod.Instance.GetName();
 
         public override VersioningPolicy<string> VersioningPolicy { get; }
-            = new EqualityVersioningPolicy<string>(BossTracker.Instance.GetVersion());
+            = new EqualityVersioningPolicy<string>(BossTrackerMod.Instance.GetVersion());
 
         public override void ReceiveSettings(GlobalSettings settings)
         {
@@ -81,7 +81,7 @@ namespace BossTracker
 
         public override bool TryProvideSettings(out GlobalSettings settings)
         {
-            settings = GlobalSettings.MinimalClone(BossTracker.GS);
+            settings = GlobalSettings.MinimalClone(BossTrackerMod.GS);
             return settings.AnyEnabled();
         }
     }

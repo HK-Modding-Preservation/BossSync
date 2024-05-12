@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace BossTracker
+namespace BossTrackerMod
 {
     // More or less copied from homothety's RandomizerMod PoolSettings
     public class GlobalSettings
@@ -40,7 +40,7 @@ namespace BossTracker
             gsClone.trackInteropPool = new();
             foreach (KeyValuePair<string, bool> kvp in gs.trackInteropPool)
             {
-                if (BossTracker.Instance.Interops.ContainsKey(kvp.Key) && kvp.Value)
+                if (BossTrackerMod.Instance.Interops.ContainsKey(kvp.Key) && kvp.Value)
                 {
                     gsClone.trackInteropPool[kvp.Key] = true;
                 }

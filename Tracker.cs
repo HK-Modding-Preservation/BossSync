@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BossTracker;
+using BossTrackerMod;
 
-namespace BossTracker
+namespace BossTrackerMod
 {
     internal class Tracker
     {
@@ -40,16 +40,16 @@ namespace BossTracker
 
         private static void TrackBossKill(RequestBuilder rb)
         {
-            BossTracker.Instance.Log("Track Boss Kill");
+            BossTrackerMod.Instance.Log("Track Boss Kill");
         }
 
         private static void RecordBossKill(RequestBuilder rb)
         {
-            BossTracker.Instance.Log("Record Boss Kill");
+            BossTrackerMod.Instance.Log("Record Boss Kill");
         }
         private static void TestBossKill(RequestBuilder rb)
         {
-            BossTracker.Instance.Log("Test Boss Kill");
+            BossTrackerMod.Instance.Log("Test Boss Kill");
         }
 
         //private static void TrackInteropItems(RequestBuilder rb)

@@ -16,7 +16,7 @@ using static RandomizerMod.Localization;
 using static UnityEngine.GridBrushBase;
 using MultiWorldLib.ExportedAPI;
 
-namespace BossTracker
+namespace BossTrackerMod
 {
     // More or less copied from RandoVanillaTracker/flibber's RandoPlus
     internal class Menu
@@ -59,7 +59,7 @@ namespace BossTracker
             btPage = new MenuPage(Localize("Boss Tracker"), landingPage);
             btPageTitle = new MenuLabel(btPage, "Select Boss Tracker", MenuLabel.Style.Title);
             btPageTitle.MoveTo(new Vector2(0, 400));
-            btMEF = new (btPage, BossTracker.GS);
+            btMEF = new (btPage, BossTrackerMod.GS);
 
             //rvtMEF.ElementLookup["Charms"].SelfChanged += CostFixes.Other_SelfChanged;
             //rvtMEF.ElementLookup["Relics"].SelfChanged += CostFixes.Other_SelfChanged;
