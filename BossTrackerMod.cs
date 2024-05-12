@@ -41,6 +41,7 @@ namespace BossTrackerMod
             //if (ModHooks.GetMod("RandoSettingsManager") is not null)
             //{
             //    RSMInterop.Hook();
+
             //}
         }
 
