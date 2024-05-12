@@ -2,6 +2,10 @@
 using MenuChanger.Extensions;
 using MenuChanger.MenuElements;
 using MenuChanger.MenuPanels;
+using ItemSyncMod;
+using ItemSyncMod.Connection;
+using ItemSyncMod.Menu;
+using MultiWorldLib;
 using RandomizerMod.Menu;
 using RandomizerMod.Settings;
 using System.Collections.Generic;
@@ -10,6 +14,7 @@ using System.Linq;
 using UnityEngine;
 using static RandomizerMod.Localization;
 using static UnityEngine.GridBrushBase;
+using MultiWorldLib.ExportedAPI;
 
 namespace BossTracker
 {
@@ -33,17 +38,21 @@ namespace BossTracker
 
         public static void Hook()
         {
-            RandomizerMenuAPI.AddMenuPage(ConstructMenu, HandleButton);
+            ExportedExtensionsMenuAPI.AddExtensionsMenu(ConstructMenu);
             MenuChangerMod.OnExitMainMenu += OnExitMenu;
         }
 
-        private static bool HandleButton(MenuPage landingPage, out SmallButton button)
-        {
-            button = Instance.JumpToBTButton;
-            return true;
-        }
+        //private static bool HandleButton(MenuPage landingPage, out SmallButton button)
+        //{
+        //    button = Instance.JumpToBTButton;
+        //    return true;
+        //}
 
-        private static void ConstructMenu(MenuPage landingPage) => Instance = new(landingPage);
+        private static BaseButton ConstructMenu(MenuPage landingPage)
+        {
+            Instance = new (landingPage);
+            return Instance.JumpToBTButton;
+        }
 
         private Menu(MenuPage landingPage)
         {

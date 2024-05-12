@@ -27,17 +27,17 @@ namespace BossTracker
 
         public override void Initialize()
         {
-            if (ModHooks.GetMod("Randomizer 4") is not Mod) return;
+            if (ModHooks.GetMod("Randomizer 4") is not Mod || ModHooks.GetMod("ItemSync") is not Mod) return;
 
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             ModHooks.OnReceiveDeathEventHook += OnEnemyDeath;
-            Menu.Hook();
-            Tracker.Hook();
+            //Menu.Hook();
+            //Tracker.Hook();
 
-            if (ModHooks.GetMod("RandoSettingsManager") is not null)
-            {
-                RSMInterop.Hook();
-            }
+            //if (ModHooks.GetMod("RandoSettingsManager") is not null)
+            //{
+            //    RSMInterop.Hook();
+            //}
         }
 
         private void OnEnemyDeath(EnemyDeathEffects enemyDeathEffects, bool eventAlreadyReceived, ref float? attackDirection, ref bool resetDeathEvent, ref bool spellBurn, ref bool isWatery)

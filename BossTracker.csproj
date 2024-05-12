@@ -64,8 +64,14 @@
 	  <Reference Include="RandomizerCore">
 		  <HintPath>$(HollowKnightRefs)\Mods\RandomizerCore\RandomizerCore.dll</HintPath>
 	  </Reference>
+	  <Reference Include="ItemSync">
+		  <HintPath>$(HollowKnightRefs)\Mods\ItemSync\ItemSync.dll</HintPath>
+	  </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+	      <Reference Include="MultiWorldLib">
+      <HintPath>$(HollowKnightRefs)\Mods\MultiWorldLib\MultiWorldLib.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp-firstpass.dll</HintPath>
