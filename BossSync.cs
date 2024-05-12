@@ -71,9 +71,9 @@ namespace BossTrackerMod
             BossTrackerMod.Instance.Log(" " + self.boolName);
 
             // this hook handles most special cases (i.e. bosses) that unconditionally set the killedX PD bool to grant the journal.
-            bool settingKilledTrue = self.boolName.Value.StartsWith("killed") && self.value.Value;
-
-            if(!settingKilledTrue) 
+            bool settingKilledTrue = self.boolName.Value.ToLower().Contains("killed") && self.value.Value;
+            bool settingDefeatedTrue = self.boolName.Value.ToLower().Contains("defeat") && self.value.Value;
+            if (!settingKilledTrue && !settingDefeatedTrue) 
             {
                 return;
             }
@@ -81,7 +81,6 @@ namespace BossTrackerMod
             //if (ItemSyncMod.ItemSyncMod.Connection?.IsConnected() != true) return;
             foreach (var toPlayerId in SyncPlayers)
             {
-                BossTrackerMod.Instance.Log($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
                 ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
                         JsonConvert.SerializeObject(self.boolName.Value),
                         toPlayerId);
@@ -95,8 +94,6 @@ namespace BossTrackerMod
             BossTrackerMod.Instance.Log($"BossSync get Boss Kill[{boolName}] true\n     form[{dataReceivedEvent.From}]");
 
             PlayerData.instance.SetBool(boolName, true);
-
-            PlayerData.instance.SetBool("falseKnightDefeated", true);
             //PlayerData.instance.SetBool("killedFalseKnight", true);
             //PlayerData.instance.SetInt("killsFalseKnight", 0);
             //PlayerData.instance.SetBool("newDataFalseKnight", true);
