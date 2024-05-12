@@ -42,12 +42,6 @@ namespace BossTrackerMod
             MenuChangerMod.OnExitMainMenu += OnExitMenu;
         }
 
-        //private static bool HandleButton(MenuPage landingPage, out SmallButton button)
-        //{
-        //    button = Instance.JumpToBTButton;
-        //    return true;
-        //}
-
         private static BaseButton ConstructMenu(MenuPage landingPage)
         {
             Instance = new (landingPage);
@@ -60,14 +54,6 @@ namespace BossTrackerMod
             btPageTitle = new MenuLabel(btPage, "Select Boss Tracker", MenuLabel.Style.Title);
             btPageTitle.MoveTo(new Vector2(0, 400));
             btMEF = new (btPage, BossTrackerMod.GS);
-
-            //rvtMEF.ElementLookup["Charms"].SelfChanged += CostFixes.Other_SelfChanged;
-            //rvtMEF.ElementLookup["Relics"].SelfChanged += CostFixes.Other_SelfChanged;
-            //rvtMEF.ElementLookup["PaleOre"].SelfChanged += CostFixes.Other_SelfChanged;
-            //rvtMEF.ElementLookup["RancidEggs"].SelfChanged += CostFixes.Other_SelfChanged;
-            //rvtMEF.ElementLookup["MaskShards"].SelfChanged += CostFixes.Other_SelfChanged;
-
-            ConstructInteropButtons();
             btGIP = new(btPage, new Vector2(0, 300), 4, 50f, 400f, true, btMEF.Elements.Concat(btInteropButtons).ToArray());
             Localize(btMEF);
 

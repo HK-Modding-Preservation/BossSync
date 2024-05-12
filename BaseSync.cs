@@ -14,7 +14,6 @@ namespace BossTrackerMod
         public List<int> SyncPlayers = new List<int>();
         public BaseSync(string mESSAGE_LABEL)
         {
-            BossTrackerMod.Instance.Log("INIT HAS BEEN CALLED DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             //MESSAGE_LABEL = $"{nameof(BossSyncMod)}-{mESSAGE_LABEL}";
             MESSAGE_LABEL = mESSAGE_LABEL;
             Init();
