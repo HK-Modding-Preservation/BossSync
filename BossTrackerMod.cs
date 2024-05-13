@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mono.Security.X509.X520;
 using UObject = UnityEngine.Object;
 
 namespace BossTrackerMod
@@ -66,11 +67,16 @@ namespace BossTrackerMod
 
         internal void LogFalseKnight()
         {
-            Log("falseKnightDefeated = " + PlayerData.instance.falseKnightDefeated);
-            Log("killedFalseKnight = " + PlayerData.instance.killedFalseKnight);
-            Log("killsFalseKnight = " + PlayerData.instance.killsFalseKnight);
-            Log("newDataFalseKnight = " + PlayerData.instance.newDataFalseKnight);
-            Log("newDataBlackKnight = " + PlayerData.instance.newDataBlackKnight);
+            //Log("falseKnightDefeated = " + PlayerData.instance.falseKnightDefeated);
+            //Log("killedFalseKnight = " + PlayerData.instance.killedFalseKnight);
+            //Log("killsFalseKnight = " + PlayerData.instance.killsFalseKnight);
+            //Log("newDataFalseKnight = " + PlayerData.instance.newDataFalseKnight);
+            //Log("newDataBlackKnight = " + PlayerData.instance.newDataBlackKnight);
+            Log("unlockedBossScenes: ");
+            foreach (string name in PlayerData.instance.unlockedBossScenes)
+            {
+                Log(name);
+            }
         }
 
         internal void KillFalseKnight()
@@ -79,7 +85,8 @@ namespace BossTrackerMod
             //PlayerData.instance.SetBool("killedFalseKnight", true);
             //PlayerData.instance.SetInt("killsFalseKnight", 0);
             //PlayerData.instance.SetBool("newDataFalseKnight", true);
-            PlayerData.instance.SetBool("newDataBlackKnight", true);
+            PlayerData.instance.SetBool("killedBlackKnight", true);
+            PlayerData.instance.unlockedBossScenes.Add("Watcher Knights Boss Scene");
         }
 
         internal void CustomLog(string log)

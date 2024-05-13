@@ -79,6 +79,33 @@ namespace BossTrackerMod
             BossTrackerMod.Instance.Log($"BossSync get Boss Kill[{boolName}] true\n     form[{dataReceivedEvent.From}]");
 
             PlayerData.instance.SetBool(boolName, true);
+
+            // Special handling for watcher knights
+            if(boolName == "killedBlackKnight")
+            {
+                PlayerData.instance.unlockedBossScenes.Add("Watcher Knights Boss Scene");
+                bool found = false;
+                foreach (var item in GameManager.instance.sceneData.persistentBoolItems)
+                {
+                    if(item.id == "Battle Control")
+                    {
+                        item.activated = true;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    PersistentBoolData battleControlData = new PersistentBoolData();
+                    battleControlData.id = "Battle Control";
+                    battleControlData.sceneName = "Ruins2_03";
+                    battleControlData.activated = true;
+                    battleControlData.semiPersistent = false;
+
+                    GameManager.instance.sceneData.persistentBoolItems.Add(battleControlData);
+                }
+                
+            }
         }
     }
 
