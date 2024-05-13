@@ -34,22 +34,7 @@ namespace BossTrackerMod
             BossSync = new BossSync();
 
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            //ModHooks.OnReceiveDeathEventHook += OnEnemyDeath;
             Menu.Hook();
-            //Tracker.Hook();
-
-            //if (ModHooks.GetMod("RandoSettingsManager") is not null)
-            //{
-            //    RSMInterop.Hook();
-
-            //}
-        }
-
-        private void OnEnemyDeath(EnemyDeathEffects enemyDeathEffects, bool eventAlreadyReceived, ref float? attackDirection, ref bool resetDeathEvent, ref bool spellBurn, ref bool isWatery)
-        {
-            if (eventAlreadyReceived) return;
-
-            Log("enemyDeathEffects name: " + enemyDeathEffects.name);
         }
 
         private void LogAllUnlockedBossScenes()
@@ -85,14 +70,16 @@ namespace BossTrackerMod
             Log("killedFalseKnight = " + PlayerData.instance.killedFalseKnight);
             Log("killsFalseKnight = " + PlayerData.instance.killsFalseKnight);
             Log("newDataFalseKnight = " + PlayerData.instance.newDataFalseKnight);
+            Log("newDataBlackKnight = " + PlayerData.instance.newDataBlackKnight);
         }
 
         internal void KillFalseKnight()
         {
-            PlayerData.instance.SetBool("falseKnightDefeated", true);
-            PlayerData.instance.SetBool("killedFalseKnight", true);
-            PlayerData.instance.SetInt("killsFalseKnight", 0);
-            PlayerData.instance.SetBool("newDataFalseKnight", true);
+            //PlayerData.instance.SetBool("falseKnightDefeated", true);
+            //PlayerData.instance.SetBool("killedFalseKnight", true);
+            //PlayerData.instance.SetInt("killsFalseKnight", 0);
+            //PlayerData.instance.SetBool("newDataFalseKnight", true);
+            PlayerData.instance.SetBool("newDataBlackKnight", true);
         }
 
         internal void CustomLog(string log)

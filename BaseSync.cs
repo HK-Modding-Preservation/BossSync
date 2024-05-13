@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace BossTrackerMod
 {
+    // Copied for the most part from MapSync mod
     public class BaseSync
     {
         public readonly string MESSAGE_LABEL;

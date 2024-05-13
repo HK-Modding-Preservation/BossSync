@@ -17,7 +17,7 @@ using HutongGames.PlayMaker.Actions;
 
 namespace BossTrackerMod
 {
-    // Copied for the most part from MapSync mod
+    
     public class BossSync : BaseSync
     {
         public BossSync() : base("BossTrackerMod-BossUnlock") { }
