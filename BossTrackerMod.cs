@@ -13,10 +13,6 @@ namespace BossTrackerMod
     public class BossTrackerMod : Mod, IGlobalSettings<GlobalSettings>
     {
         internal static BossTrackerMod Instance;
-        public BossTrackerMod()
-        {
-            Instance = this;
-        }
         new public string GetName() => "BossSync";
         public override string GetVersion() => "1.0.0.0";
 
@@ -25,9 +21,11 @@ namespace BossTrackerMod
         public GlobalSettings OnSaveGlobal() => GS;
 
         internal Dictionary<string, Func<List<VanillaDef>>> Interops = new();
-
         public BossSync BossSync;
-
+        public BossTrackerMod()
+        {
+            Instance = this;
+        }
         public override void Initialize()
         {
            // if (ModHooks.GetMod("ItemSync") is not Mod) return;

@@ -14,6 +14,9 @@ using MonoMod.RuntimeDetour;
 using System.Reflection;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
+using MenuChanger.MenuElements;
+using ItemChanger;
+
 
 namespace BossTrackerMod
 {
@@ -23,10 +26,15 @@ namespace BossTrackerMod
         public BossSync() : base("BossTrackerMod-BossUnlock") { }
         protected override void OnEnterGame()
         {
+            //Get button value
+            if (Menu.Instance.btButtons[0].Value == false)
+            {
+                BossTrackerMod.Instance.Log("Bosses Not Synced");
+                return;
+            }
 
             On.HutongGames.PlayMaker.Actions.SetPlayerDataBool.OnEnter += OnSetPlayerDataBoolAction;
             On.HutongGames.PlayMaker.Actions.SetPlayerDataString.OnEnter += OnSetPlayerDataStringAction;
-
             var readyMetadata = ItemSyncMod.ItemSyncMod.ISSettings.readyMetadata;
             for (int playerid = 0; playerid < readyMetadata.Count; playerid++)
             {
@@ -75,6 +83,12 @@ namespace BossTrackerMod
 
         protected override void OnDataReceived(DataReceivedEvent dataReceivedEvent)
         {
+            if (Interop.HasRecentItemsDisplay())
+            {
+                //RecentItemsDisplay.Export.ShowItemChangerSprite($"{getBenchNmae(benchKey)}", "ShopIcons.BenchPin");
+                
+            }
+                
             string boolName = JsonConvert.DeserializeObject<string>(dataReceivedEvent.Content);
             BossTrackerMod.Instance.Log($"BossSync get Boss Kill[{boolName}] true\n     form[{dataReceivedEvent.From}]");
 

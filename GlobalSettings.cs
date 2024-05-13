@@ -7,7 +7,7 @@ namespace BossTrackerMod
     // More or less copied from homothety's RandomizerMod PoolSettings
     public class GlobalSettings
     {
-        public bool Bosses;
+        public bool SyncBosses;
 
         private static readonly Dictionary<string, FieldInfo> fields = typeof(GlobalSettings)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)
@@ -28,25 +28,6 @@ namespace BossTrackerMod
         public bool AnyEnabled()
         {
             return fields.Keys.Any(f => GetFieldByName(f)) || trackInteropPool.Values.Any(interop => interop);
-        }
-
-        /// <summary>
-        /// Only copies over enabled interop pools for currently registered connection mods.
-        /// </summary>
-        public static GlobalSettings MinimalClone(GlobalSettings gs)
-        {
-            GlobalSettings gsClone = (GlobalSettings)gs.MemberwiseClone();
-
-            gsClone.trackInteropPool = new();
-            foreach (KeyValuePair<string, bool> kvp in gs.trackInteropPool)
-            {
-                if (BossTrackerMod.Instance.Interops.ContainsKey(kvp.Key) && kvp.Value)
-                {
-                    gsClone.trackInteropPool[kvp.Key] = true;
-                }
-            }
-
-            return gsClone;
         }
     }
 }
