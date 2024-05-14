@@ -14,7 +14,7 @@ namespace BossTrackerMod
     {
         internal static BossSyncMod Instance;
         new public string GetName() => "BossSync";
-        public override string GetVersion() => "1.0.0.1";
+        public override string GetVersion() => "1.0.1.0";
 
         public static GlobalSettings GS = new();
         public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
