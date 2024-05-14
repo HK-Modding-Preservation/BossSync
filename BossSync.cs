@@ -14,7 +14,7 @@ namespace BossTrackerMod
             //Get button value
             if (Menu.Instance.btButtons[0].Value == false)
             {
-                BossSyncMod.Instance.Log("Bosses Not Synced");
+                BossSyncMod.Instance.Log("Bosses Sync not enabled");
                 return;
             }
 
