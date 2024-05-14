@@ -1,6 +1,14 @@
 ﻿using MultiWorldLib;
 using Newtonsoft.Json;
 using HutongGames.PlayMaker.Actions;
+using ItemChanger.UIDefs;
+using ItemChanger;
+using RecentItemsDisplay;
+using Modding;
+using RandomizerMod.RandomizerData;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 
 namespace BossTrackerMod
@@ -9,6 +17,7 @@ namespace BossTrackerMod
     public class BossSync : BaseSync
     {
         public BossSync() : base("BossTrackerMod-BossUnlock") { }
+        internal List<string> displayedNames = new List<string>();
         protected override void OnEnterGame()
         {
             //Get button value
@@ -155,24 +164,28 @@ namespace BossTrackerMod
                     // Brooding Mawlek Cases
                     case "Mawlek Body.Crossroads_09":
                         PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
+                        DisplayItem("Mawlek");
                         break;
                     case "Battle Scene.Crossroads_09":
                         break;
 
                     // Soul Warrior
                     case "Battle Scene v2.Ruins1_23":
+                        DisplayItem("Soul Warrior");
                         break;
 
                     // Oblobble
                     case "Shiny Item-Pale_Ore-Colosseum.Room_Colosseum_Silver":
                         PlayerData.instance.unlockedBossScenes.Add("Oblobbles Boss Scene");
                         PlayerData.instance.SetBool("killedOblobble", true);
+                        DisplayItem("Oblobbles");
                         break;
 
                     // Broken Vessel
                     case "Camera Locks Boss.Abyss_19":
                         PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
                         PlayerData.instance.SetBool("killedInfectedKnight", true);
+                        DisplayItem("Broken Vessel");
                         break;
 
                     // Hive knight
@@ -180,12 +193,14 @@ namespace BossTrackerMod
                     case "Shiny Item Stand.Hive_05":
                         PlayerData.instance.unlockedBossScenes.Add("Hive Knight Boss Scene");
                         PlayerData.instance.SetBool("killedHiveKnight", true);
+                        DisplayItem("Hive Knight");
                         break;
 
                     // Nosk
                     case "Battle Scene.Deepnest_32":
                         PlayerData.instance.unlockedBossScenes.Add("Nosk Boss Scene");
                         PlayerData.instance.SetBool("killedMimicSpider", true);
+                        DisplayItem("Nosk");
                         break;
 
                     // Enraged Guardian
@@ -193,12 +208,14 @@ namespace BossTrackerMod
                         break;
                     case "Zombie Beam Miner Rematch.Mines_32":
                         PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian 2 Boss Scene");
+                        DisplayItem("Enraged Guardian");
                         break;
 
                     // Traitor Lord
                     case "Battle Scene.Fungus3_23":
                         PlayerData.instance.unlockedBossScenes.Add("Traitor Lord Boss Scene");
                         PlayerData.instance.SetBool("killedTraitorLord", true);
+                        DisplayItem("Traitor Lord");
                         break;
 
                     default:
@@ -245,6 +262,7 @@ namespace BossTrackerMod
                     PlayerData.instance.SetInt(intName, 2);
                     break;
             }
+            DisplayItem(intName);
         }
 
 
@@ -257,28 +275,36 @@ namespace BossTrackerMod
                 case "killedBlackKnight":
                     PlayerData.instance.unlockedBossScenes.Add("Watcher Knights Boss Scene");
                     AddPersistentBoolItem("Battle Control.Ruins2_03", true, false);
+                    DisplayItem("Watcher Knights");
                     break;
 
                 // These bosses need to have their bossScenes manually unlocked
                 case "megaMossChargerDefeated":
                     PlayerData.instance.unlockedBossScenes.Add("Mega Moss Charger Boss Scene");
+                    DisplayItem("Mega Moss Charger");
                     break;
                 case "giantFlyDefeated":
                     PlayerData.instance.unlockedBossScenes.Add("Gruz Boss Scene");
+                    DisplayItem("Gruz Mother");
                     break;
                 case "killedMawlek":
                     PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
+                    DisplayItem("Mawlek");
                     break;
                 case "killedInfectedKnight":
                     PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
+                    DisplayItem("Broken Vessel");
                     break;
                 case "killedMegaBeamMiner":
                     PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian Boss Scene");
+                    DisplayItem("Crystal Guardian");
                     break;
                 default:
+                    DisplayItem(boolName);
                     break;
             }
             PlayerData.instance.SetBool(boolName, true);
+            
         }
         
         // updates the persistent bool item (adds a new item if the item doesn't already exist)
@@ -287,6 +313,8 @@ namespace BossTrackerMod
             // Separate data from scene name
             string sceneName = data.Substring(data.IndexOf('.') + 1);
             string id = data.Substring(0, data.IndexOf('.'));
+
+
 
             bool found = false;
             foreach (var item in GameManager.instance.sceneData.persistentBoolItems)
@@ -310,6 +338,101 @@ namespace BossTrackerMod
 
                 GameManager.instance.sceneData.persistentBoolItems.Add(battleControlData);
             }
+        }
+
+        private void DisplayItem(string name)
+        {
+            if(name.Contains("Battle") || name.Contains("Shiny"))
+            {
+                return;
+            }
+
+            // if the name contains defeated or killed, format the string
+            if (name.Contains("killed"))
+            {
+                name = name.Replace("killed", "");
+
+                int index = 0;
+                bool firstUpper = true;
+                foreach (char c in name)
+                {
+                    if (char.IsUpper(c))
+                    {
+                        if (firstUpper)
+                        {
+                            firstUpper = false;
+                        }
+                        else
+                        {
+                            name = name.Insert(index, " ");
+                        }
+                    }
+                    index++;
+                }
+            }
+            else if (name.Contains("Defeated"))
+            {
+                name = name.Replace("Defeated", "");
+
+                // Places spaces before all capitalized chars (excluding the first one)
+                int index = 0;
+                foreach (char c in name)
+                {
+                    if (char.IsUpper(c))
+                    {
+                        name = name.Insert(index, " ");
+                    }
+                    index++;
+                }
+
+                // Uppercases the first char
+                name.Replace(name.Substring(0, 1), name.Substring(0, 1).ToUpper());
+            }
+            else if(name.Contains("defeated"))
+            {
+                name = name.Replace("defeated", "");
+
+                // Places spaces before all capitalized chars (excluding the first one)
+                int index = 0;
+                bool firstUpper = true;
+                foreach (char c in name)
+                {
+                    if (char.IsUpper(c))
+                    {
+                        if(firstUpper)
+                        {
+                            firstUpper = false;
+                        }
+                        else
+                        {
+                            name = name.Insert(index, " ");
+                        }
+                    }
+                    index++;
+                }
+            }
+
+            // if the name has been previously displayed (boss has already been killed), do not display
+            foreach (string prevName in displayedNames)
+            {
+                if(prevName == name)
+                {
+                    return;
+                }
+            }
+
+            displayedNames.Add(name);
+
+            name += " Defeated";
+
+            if(Interop.HasRecentItemsDisplay())
+            {
+                ItemDisplayMethods.ShowItem(name, new ItemChangerSprite("ShopIcons.Marker_B"));
+            }
+            MsgUIDef msgUIDef = new MsgUIDef();
+            msgUIDef.sprite = new ItemChangerSprite("ShopIcons.Marker_B");
+            msgUIDef.name = new BoxedString(name);
+            msgUIDef.SendMessage(MessageType.Corner, null);
         }
     }
 
