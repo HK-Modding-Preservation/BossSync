@@ -52,9 +52,6 @@
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
   <ItemGroup>
-	<Reference Include="RandoSettingsManager">
-	  <HintPath>$(HollowKnightRefs)\Mods\RandoSettingsManager\RandoSettingsManager.dll</HintPath>
-	</Reference>
 	<Reference Include="MenuChanger">
 	  <HintPath>$(HollowKnightRefs)\Mods\MenuChanger\MenuChanger.dll</HintPath>
 	</Reference>
