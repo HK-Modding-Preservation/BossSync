@@ -65,6 +65,7 @@ namespace BossTrackerMod
             // this hook handles most bosses
             bool settingKilledTrue = self.boolName.Value.ToLower().Contains("kill") && self.value.Value;
             bool settingDefeatedTrue = self.boolName.Value.ToLower().Contains("defeat") && self.value.Value;
+            bool zoteRescued = self.boolName.Value.ToLower().Contains("zoterescued") && self.value.Value;
             if (!settingKilledTrue && !settingDefeatedTrue) 
             {
                 return;
@@ -122,7 +123,8 @@ namespace BossTrackerMod
         {
             orig(self, persistentBoolData);
             BossTrackerMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
-            string[] idNames = { "Mawlek Body", "Battle Scene" };
+            string[] idNames = { "Mawlek Body", "Battle Scene", "Battle Scene v2", "Shiny Item-Pale_Ore-Colosseum",
+                "Camera Locks Boss", "Shiny Item Stand", "Zombie Beam Miner Rematch" };
 
             // Searches through all id names to find a match
             foreach (var id in idNames)
@@ -132,9 +134,10 @@ namespace BossTrackerMod
                     if (ItemSyncMod.ItemSyncMod.Connection?.IsConnected() != true) return;
                     foreach (var toPlayerId in SyncPlayers)
                     {
-                        // Sync player data for any defeated/killed bools
+                        // Sync player data for any defeated/killed bools 
+                        // uses "." as a delimeter to separate the sceneName from the id 
                         ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
-                                JsonConvert.SerializeObject(id),
+                                JsonConvert.SerializeObject(id+"."+persistentBoolData.sceneName),
                                 toPlayerId);
                         BossTrackerMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
 
@@ -175,15 +178,56 @@ namespace BossTrackerMod
             }
             else
             {
-                switch(dataName)
+                AddPersistentBoolItem(dataName, true, false);
+                switch (dataName)
                 {
                     // Brooding Mawlek Cases
-                    case "Mawlek Body":
+                    case "Mawlek Body.Crossroads_09":
                         PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
-                        AddPersistentBoolItem(dataName, "Crossroads_09", true, false);
                         break;
-                    case "Battle Scene":
-                        AddPersistentBoolItem(dataName, "Crossroads_09", true, false);
+                    case "Battle Scene.Crossroads_09":
+                        break;
+
+                    // Soul Warrior
+                    case "Battle Scene v2.Ruins1_23":
+                        break;
+
+                    // Oblobble
+                    case "Shiny Item-Pale_Ore-Colosseum.Room_Colosseum_Silver":
+                        PlayerData.instance.unlockedBossScenes.Add("Oblobbles Boss Scene");
+                        PlayerData.instance.SetBool("killedOblobble", true);
+                        break;
+
+                    // Broken Vessel
+                    case "Camera Locks Boss.Abyss_19":
+                        PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
+                        PlayerData.instance.SetBool("killedInfectedKnight", true);
+                        break;
+
+                    // Hive knight
+                    // NOTE: the trigger for syncing is linked to picking up hiveblood not actually killing hive knight
+                    case "Shiny Item Stand.Hive_05":
+                        PlayerData.instance.unlockedBossScenes.Add("Hive Knight Boss Scene");
+                        PlayerData.instance.SetBool("killedHiveKnight", true);
+                        break;
+
+                    // Nosk
+                    case "Battle Scene.Deepnest_32":
+                        PlayerData.instance.unlockedBossScenes.Add("Nosk Boss Scene");
+                        PlayerData.instance.SetBool("killedMimicSpider", true);
+                        break;
+
+                    // Enraged Guardian
+                    case "Battle Scene.Mines_32":
+                        break;
+                    case "Zombie Beam Miner Rematch.Mines_32":
+                        PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian 2 Boss Scene");
+                        break;
+
+                    // Traitor Lord
+                    case "Battle Scene.Fungus3_23":
+                        PlayerData.instance.unlockedBossScenes.Add("Traitor Lord Boss Scene");
+                        PlayerData.instance.SetBool("killedTraitorLord", true);
                         break;
 
                     default:
@@ -241,7 +285,7 @@ namespace BossTrackerMod
                 // Special handling for watcher knights
                 case "killedBlackKnight":
                     PlayerData.instance.unlockedBossScenes.Add("Watcher Knights Boss Scene");
-                    AddPersistentBoolItem("Battle Control", "Ruins2_03", true, false);
+                    AddPersistentBoolItem("Battle Control.Ruins2_03", true, false);
                     break;
 
                 // These bosses need to have their bossScenes manually unlocked
@@ -266,9 +310,13 @@ namespace BossTrackerMod
             PlayerData.instance.SetBool(boolName, true);
         }
         
-        // updates the persistent bool item (adds a new item if the item doesn't already exist
-        private void AddPersistentBoolItem(string id, string sceneName, bool activated, bool semiPersistent)
+        // updates the persistent bool item (adds a new item if the item doesn't already exist)
+        private void AddPersistentBoolItem(string data, bool activated, bool semiPersistent)
         {
+            // Separate data from scene name
+            string sceneName = data.Substring(data.IndexOf('.') + 1);
+            string id = data.Substring(0, data.IndexOf('.'));
+
             bool found = false;
             foreach (var item in GameManager.instance.sceneData.persistentBoolItems)
             {
@@ -286,8 +334,8 @@ namespace BossTrackerMod
                 PersistentBoolData battleControlData = new PersistentBoolData();
                 battleControlData.id = id;
                 battleControlData.sceneName = sceneName;
-                battleControlData.activated = true;
-                battleControlData.semiPersistent = false;
+                battleControlData.activated = activated;
+                battleControlData.semiPersistent = semiPersistent;
 
                 GameManager.instance.sceneData.persistentBoolItems.Add(battleControlData);
             }

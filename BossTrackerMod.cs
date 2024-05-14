@@ -14,7 +14,7 @@ namespace BossTrackerMod
     {
         internal static BossTrackerMod Instance;
         new public string GetName() => "BossSync";
-        public override string GetVersion() => "1.0.0.0";
+        public override string GetVersion() => "1.0.0.1";
 
         public static GlobalSettings GS = new();
         public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
@@ -32,36 +32,9 @@ namespace BossTrackerMod
 
             BossSync = new BossSync();
 
-            ModHooks.HeroUpdateHook += OnHeroUpdate;
             Menu.Hook();
         }
 
-        private void LogAllUnlockedBossScenes()
-        {
-            Log("Boss Scenes Unlocked:");
-            foreach(var bossScene in PlayerData.instance.unlockedBossScenes)
-            {
-                Log(bossScene);
-            }
-        }
-
-        public void OnHeroUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                LogAllUnlockedBossScenes();
-            }
-
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                PlayerData.instance.unlockedBossScenes.Add("Xero Boss Scene");
-            }
-
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                PlayerData.instance.xeroDefeated = 2;
-            }
-        }
 
         internal void LogFalseKnight()
         {
