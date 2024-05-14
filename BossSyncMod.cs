@@ -2,6 +2,7 @@
 using RandomizerMod.RandomizerData;
 using System;
 using System.Collections.Generic;
+using ItemSyncMod;
 
 namespace BossTrackerMod
 {
@@ -23,8 +24,7 @@ namespace BossTrackerMod
         }
         public override void Initialize()
         {
-            Log("ITEM SYNC MOD? " + (ModHooks.GetMod("ItemSync") is not Mod));
-            // if (ModHooks.GetMod("ItemSync") is not Mod) return;
+            if (ModHooks.GetMod("ItemSync") is not Mod) return;
 
             BossSync = new BossSync();
 

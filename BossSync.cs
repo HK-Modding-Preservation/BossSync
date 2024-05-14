@@ -1,22 +1,6 @@
-﻿using BossTrackerMod;
-using ItemSyncMod;
-using ItemSyncMod.SyncFeatures.TransitionsFoundSync;
-using MapChanger;
-using Modding;
-using MultiWorldLib;
+﻿using MultiWorldLib;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MonoMod.RuntimeDetour;
-using System.Reflection;
-using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
-using MenuChanger.MenuElements;
-using ItemChanger;
-using ItemChanger.Modules;
 
 
 namespace BossTrackerMod
@@ -35,11 +19,9 @@ namespace BossTrackerMod
             }
 
             On.HutongGames.PlayMaker.Actions.SetPlayerDataBool.OnEnter += OnSetPlayerDataBoolAction;
-            //On.HutongGames.PlayMaker.Actions.SetPlayerDataString.OnEnter += OnSetPlayerDataStringAction;
             On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.OnEnter += OnSetPlayerDataIntAction;
             On.SceneData.SaveMyState_PersistentBoolData += OnPersistentBoolAction;
-            //On.SceneData.FindPersistentBoolItemInList += FindBoolItem;
-            //On.SceneData.FindMyState_PersistentBoolData += FindBoolItemState;
+
             var readyMetadata = ItemSyncMod.ItemSyncMod.ISSettings.readyMetadata;
             for (int playerid = 0; playerid < readyMetadata.Count; playerid++)
             {
@@ -51,7 +33,6 @@ namespace BossTrackerMod
         protected override void OnQuitToMenu()
         {
             On.HutongGames.PlayMaker.Actions.SetPlayerDataBool.OnEnter -= OnSetPlayerDataBoolAction;
-            //On.HutongGames.PlayMaker.Actions.SetPlayerDataString.OnEnter -= OnSetPlayerDataStringAction;
             On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.OnEnter -= OnSetPlayerDataIntAction;
             On.SceneData.SaveMyState_PersistentBoolData -= OnPersistentBoolAction;
         }
@@ -82,16 +63,6 @@ namespace BossTrackerMod
 
                 
             }
-        }
-        private void OnSetPlayerDataStringAction(On.HutongGames.PlayMaker.Actions.SetPlayerDataString.orig_OnEnter orig, SetPlayerDataString self)
-        {
-            orig(self);
-            //BossTrackerMod.Instance.Log("String variable name: " + self.stringName.Value + ":" + self.value.Value);
-            // After every sync, sync the player's unlockedBossScenes
-            //string[] unlockedBossScenes = PlayerData.instance.GetVariable<string[]>("unlockedBossScenes");
-            //ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
-            //       JsonConvert.SerializeObject(unlockedBossScenes),
-            //       toPlayerId);
         }
 
         private void OnSetPlayerDataIntAction(On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.orig_OnEnter orig, SetPlayerDataInt self)

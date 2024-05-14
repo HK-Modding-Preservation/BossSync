@@ -2,24 +2,14 @@
 using MenuChanger.Extensions;
 using MenuChanger.MenuElements;
 using MenuChanger.MenuPanels;
-using ItemSyncMod;
-using ItemSyncMod.Connection;
-using ItemSyncMod.Menu;
-using MultiWorldLib;
-using RandomizerMod.Menu;
-using RandomizerMod.Settings;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using static RandomizerMod.Localization;
-using static UnityEngine.GridBrushBase;
 using MultiWorldLib.ExportedAPI;
-using MapChanger.UI;
 
 namespace BossTrackerMod
 {
-    // More or less copied from RandoVanillaTracker/flibber's RandoPlus
     internal class Menu
     {
         internal MenuPage btPage;
