@@ -54,12 +54,12 @@ namespace BossTrackerMod
 
             if (Input.GetKeyDown(KeyCode.P))
             {
-                LogFalseKnight();
+                PlayerData.instance.unlockedBossScenes.Add("Xero Boss Scene");
             }
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                KillFalseKnight();
+                PlayerData.instance.xeroDefeated = 2;
             }
         }
 
@@ -82,9 +82,10 @@ namespace BossTrackerMod
             //PlayerData.instance.SetBool("falseKnightDefeated", true);
             //PlayerData.instance.SetBool("killedFalseKnight", true);
             //PlayerData.instance.SetInt("killsFalseKnight", 0);
+            PlayerData.instance.xeroDefeated = 2;
             //PlayerData.instance.SetBool("newDataFalseKnight", true);
-            PlayerData.instance.SetBool("killedBlackKnight", true);
-            PlayerData.instance.unlockedBossScenes.Add("Watcher Knights Boss Scene");
+            //PlayerData.instance.SetBool("killedBlackKnight", true);
+            //PlayerData.instance.unlockedBossScenes.Add("Xero Boss Scene");
         }
 
         internal void CustomLog(string log)
