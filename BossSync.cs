@@ -30,7 +30,7 @@ namespace BossTrackerMod
             //Get button value
             if (Menu.Instance.btButtons[0].Value == false)
             {
-                BossTrackerMod.Instance.Log("Bosses Not Synced");
+                BossSyncMod.Instance.Log("Bosses Not Synced");
                 return;
             }
 
@@ -43,8 +43,8 @@ namespace BossTrackerMod
             var readyMetadata = ItemSyncMod.ItemSyncMod.ISSettings.readyMetadata;
             for (int playerid = 0; playerid < readyMetadata.Count; playerid++)
             {
-                BossTrackerMod.Instance.BossSync.SyncPlayers.Add(playerid);
-                BossTrackerMod.Instance.Log($"addBossSyncPlayers playerid[{playerid}]");
+                BossSyncMod.Instance.BossSync.SyncPlayers.Add(playerid);
+                BossSyncMod.Instance.Log($"addBossSyncPlayers playerid[{playerid}]");
             }
         }
 
@@ -60,17 +60,17 @@ namespace BossTrackerMod
         {
             orig(self);
 
-            BossTrackerMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
+            BossSyncMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.boolName.Value.ToLower().Contains("kill") && self.value.Value;
             bool settingDefeatedTrue = self.boolName.Value.ToLower().Contains("defeat") && self.value.Value;
             bool zoteRescued = self.boolName.Value.ToLower().Contains("zoterescued") && self.value.Value;
-            if (!settingKilledTrue && !settingDefeatedTrue) 
+            if (!settingKilledTrue && !settingDefeatedTrue && !zoteRescued) 
             {
                 return;
             }
-            BossTrackerMod.Instance.Log(ItemSyncMod.ItemSyncMod.Connection?.IsConnected());
+            BossSyncMod.Instance.Log(ItemSyncMod.ItemSyncMod.Connection?.IsConnected());
             if (ItemSyncMod.ItemSyncMod.Connection?.IsConnected() != true) return;
             foreach (var toPlayerId in SyncPlayers)
             {
@@ -78,7 +78,7 @@ namespace BossTrackerMod
                 ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
                         JsonConvert.SerializeObject("b." + self.boolName.Value),
                         toPlayerId);
-                BossTrackerMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
+                BossSyncMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
 
                 
             }
@@ -97,7 +97,7 @@ namespace BossTrackerMod
         private void OnSetPlayerDataIntAction(On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.orig_OnEnter orig, SetPlayerDataInt self)
         {
             orig(self);
-            BossTrackerMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
+            BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.intName.Value.ToLower().Contains("defeat") && self.value.Value == 2;
@@ -105,7 +105,7 @@ namespace BossTrackerMod
             {
                 return;
             }
-            BossTrackerMod.Instance.Log(ItemSyncMod.ItemSyncMod.Connection?.IsConnected());
+            BossSyncMod.Instance.Log(ItemSyncMod.ItemSyncMod.Connection?.IsConnected());
             if (ItemSyncMod.ItemSyncMod.Connection?.IsConnected() != true) return;
             foreach (var toPlayerId in SyncPlayers)
             {
@@ -113,7 +113,7 @@ namespace BossTrackerMod
                 ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
                         JsonConvert.SerializeObject("i." + self.intName.Value),
                         toPlayerId);
-                BossTrackerMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
+                BossSyncMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
 
 
             }
@@ -122,7 +122,7 @@ namespace BossTrackerMod
         private void OnPersistentBoolAction(On.SceneData.orig_SaveMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
         {
             orig(self, persistentBoolData);
-            BossTrackerMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
+            BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
             string[] idNames = { "Mawlek Body", "Battle Scene", "Battle Scene v2", "Shiny Item-Pale_Ore-Colosseum",
                 "Camera Locks Boss", "Shiny Item Stand", "Zombie Beam Miner Rematch" };
 
@@ -139,7 +139,7 @@ namespace BossTrackerMod
                         ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
                                 JsonConvert.SerializeObject(id+"."+persistentBoolData.sceneName),
                                 toPlayerId);
-                        BossTrackerMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
+                        BossSyncMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
 
                     }
                     break;
@@ -161,7 +161,7 @@ namespace BossTrackerMod
 
                 
             string dataName = JsonConvert.DeserializeObject<string>(dataReceivedEvent.Content);
-            BossTrackerMod.Instance.Log($"BossSync get Data[{dataName}] true\n     from[{dataReceivedEvent.From}]");
+            BossSyncMod.Instance.Log($"BossSync get Data[{dataName}] true\n     from[{dataReceivedEvent.From}]");
 
 
             if (dataName.StartsWith("b."))

@@ -34,7 +34,7 @@ namespace BossTrackerMod
         {
             if (!ItemSyncMod.ItemSyncMod.ISSettings.IsItemSync) return;
             ItemSyncMod.ItemSyncMod.Connection.OnDataReceived += OnDataReceivedInternal;
-            BossTrackerMod.Instance.Log("ON ENTER GAME");
+            BossSyncMod.Instance.Log("ON ENTER GAME");
             OnEnterGame();
         }
         protected virtual void OnEnterGame() { }
