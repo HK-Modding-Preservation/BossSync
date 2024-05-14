@@ -50,7 +50,7 @@ namespace BossTrackerMod
         {
             orig(self);
 
-            BossSyncMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
+            //BossSyncMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.boolName.Value.ToLower().Contains("kill") && self.value.Value;
@@ -77,7 +77,7 @@ namespace BossTrackerMod
         private void OnSetPlayerDataIntAction(On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.orig_OnEnter orig, SetPlayerDataInt self)
         {
             orig(self);
-            BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
+            //BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.intName.Value.ToLower().Contains("defeat") && self.value.Value == 2;
@@ -102,7 +102,7 @@ namespace BossTrackerMod
         private void OnPersistentBoolAction(On.SceneData.orig_SaveMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
         {
             orig(self, persistentBoolData);
-            BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
+            //BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
             string[] idNames = { "Mawlek Body", "Battle Scene", "Battle Scene v2", "Shiny Item-Pale_Ore-Colosseum",
                 "Camera Locks Boss", "Shiny Item Stand", "Zombie Beam Miner Rematch" };
 
@@ -237,32 +237,39 @@ namespace BossTrackerMod
                 case "xeroDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("Xero Boss Scene");
+                    DisplayItem("Xero");
                     break;
                 case "aladarSlugDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("Gorb Boss Scene");
+                    DisplayItem("Gorb");
                     break;
                 case "elderHuDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("Elder Hu Boss Scene");
+                    DisplayItem("Elder Hu");
                     break;
                 case "mumCaterpillarDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("Marmu Boss Scene");
+                    DisplayItem("Marmu");
                     break;
                 case "noEyesDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("No Eyes Boss Scene");
+                    DisplayItem("No Eyes");
                     break;
                 case "markothDefeated":
                     PlayerData.instance.SetInt(intName, 2);
                     PlayerData.instance.unlockedBossScenes.Add("Markoth Boss Scene");
+                    DisplayItem("Markoth");
                     break;
                 default:
                     PlayerData.instance.SetInt(intName, 2);
+                    DisplayItem(intName);
                     break;
             }
-            DisplayItem(intName);
+            
         }
 
 
@@ -352,22 +359,12 @@ namespace BossTrackerMod
             {
                 name = name.Replace("killed", "");
 
-                int index = 0;
-                bool firstUpper = true;
-                foreach (char c in name)
+                for(int index = name.Length - 1; index >= 0; index--)
                 {
-                    if (char.IsUpper(c))
+                    if (char.IsUpper(name[index]))
                     {
-                        if (firstUpper)
-                        {
-                            firstUpper = false;
-                        }
-                        else
-                        {
-                            name = name.Insert(index, " ");
-                        }
+                        name = name.Insert(index, " ");
                     }
-                    index++;
                 }
             }
             else if (name.Contains("Defeated"))
@@ -375,42 +372,36 @@ namespace BossTrackerMod
                 name = name.Replace("Defeated", "");
 
                 // Places spaces before all capitalized chars (excluding the first one)
-                int index = 0;
-                foreach (char c in name)
+                for (int index = name.Length - 1; index >= 0; index--)
                 {
-                    if (char.IsUpper(c))
+                    if (char.IsUpper(name[index]))
                     {
                         name = name.Insert(index, " ");
                     }
-                    index++;
                 }
-
-                // Uppercases the first char
-                name.Replace(name.Substring(0, 1), name.Substring(0, 1).ToUpper());
             }
             else if(name.Contains("defeated"))
             {
                 name = name.Replace("defeated", "");
 
                 // Places spaces before all capitalized chars (excluding the first one)
-                int index = 0;
-                bool firstUpper = true;
-                foreach (char c in name)
+                for (int index = name.Length - 1; index >= 0; index--)
                 {
-                    if (char.IsUpper(c))
+                    if (char.IsUpper(name[index]))
                     {
-                        if(firstUpper)
-                        {
-                            firstUpper = false;
-                        }
-                        else
-                        {
-                            name = name.Insert(index, " ");
-                        }
+                        name = name.Insert(index, " ");
                     }
-                    index++;
                 }
             }
+
+            // remove space at beginning of string if its there
+            if (name[0] == ' ')
+            {
+                name = name.Substring(1);
+            }
+
+            // Uppercases the first char
+            name = name.Replace(name.Substring(0, 1), name.Substring(0, 1).ToUpper());
 
             // if the name has been previously displayed (boss has already been killed), do not display
             foreach (string prevName in displayedNames)
