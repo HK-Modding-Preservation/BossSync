@@ -6,3 +6,4 @@ An extension mod for ItemSync that syncs boss kills, ensuring that players don't
 - ItemSync
 - MenuChanger
 - Randomizer 4
+- RecentItemsDisplay
