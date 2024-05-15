@@ -45,7 +45,7 @@
     </GetFileHash>
     <PropertyGroup>
       <OutputZipString>SHA256 - $(AssemblyTitle).zip:</OutputZipString>
-    </PropertyGroup>
+    </PropertyGroup> 
     <GetFileHash Files="$(ExportDir)/$(TargetName)/$(TargetName).zip" Algorithm="SHA256">
       <Output TaskParameter="Items" ItemName="ZipFilesWithHashes" />
     </GetFileHash>
@@ -61,15 +61,15 @@
 	  <Reference Include="RandomizerCore">
 		  <HintPath>$(HollowKnightRefs)\Mods\RandomizerCore\RandomizerCore.dll</HintPath>
 	  </Reference>
+	  <Reference Include="RecentItemsDisplay">  
+		  <HintPath>$(HollowKnightRefs)\Mods\RecentItemsDisplay\RecentItemsDisplay.dll</HintPath>
+	  </Reference>
 	  <Reference Include="ItemSync">
 		  <HintPath>$(HollowKnightRefs)\Mods\ItemSync\ItemSync.dll</HintPath>
 	  </Reference>
 	  <Reference Include="ItemChanger">
 		  <HintPath>$(HollowKnightRefs)\Mods\ItemChanger\ItemChanger.dll</HintPath>
 	  </Reference>
-	  	  <Reference Include="RecentItemsDisplay">
-		  <HintPath>$(HollowKnightRefs)\Mods\RecentItemsDisplay\RecentItemsDisplay.dll</HintPath>
-	  </Reference>	  
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
     </Reference>

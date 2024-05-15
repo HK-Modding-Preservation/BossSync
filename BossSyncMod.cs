@@ -2,11 +2,6 @@
 using RandomizerMod.RandomizerData;
 using System;
 using System.Collections.Generic;
-using ItemSyncMod;
-using ItemChanger;
-using UnityEngine;
-using RecentItemsDisplay;
-using ItemChanger.UIDefs;
 
 namespace BossTrackerMod
 {
@@ -33,19 +28,7 @@ namespace BossTrackerMod
             Interop.FindInteropMods();
             BossSync = new BossSync();
             Menu.Hook();
-            ModHooks.HeroUpdateHook += Update;
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                Log("Displayed Names: ");
-                foreach (var elem in BossSync.displayedNames)
-                {
-                    Log(elem);
-                }
-            }
-        }
     }
 }

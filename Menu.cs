@@ -7,8 +7,6 @@ using System.Linq;
 using UnityEngine;
 using static RandomizerMod.Localization;
 using MultiWorldLib.ExportedAPI;
-using Modding;
-using ItemChanger;
 
 namespace BossTrackerMod
 {

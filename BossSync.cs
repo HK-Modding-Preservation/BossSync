@@ -3,12 +3,7 @@ using Newtonsoft.Json;
 using HutongGames.PlayMaker.Actions;
 using ItemChanger.UIDefs;
 using ItemChanger;
-using RecentItemsDisplay;
-using Modding;
-using RandomizerMod.RandomizerData;
 using System.Collections.Generic;
-using System.Linq;
-using System;
 
 
 namespace BossTrackerMod
@@ -133,13 +128,6 @@ namespace BossTrackerMod
 
         protected override void OnDataReceived(DataReceivedEvent dataReceivedEvent)
         {
-            //if (Interop.HasRecentItemsDisplay())
-            //{
-            //    RecentItemsDisplay.Export.ShowItemChangerSprite($"{getBenchNmae(benchKey)}", "ShopIcons.BenchPin");
-                
-            //}
-
-                
             string dataName = JsonConvert.DeserializeObject<string>(dataReceivedEvent.Content);
             BossSyncMod.Instance.Log($"BossSync get Data[{dataName}] true\n     from[{dataReceivedEvent.From}]");
 
@@ -416,14 +404,20 @@ namespace BossTrackerMod
 
             name += " Defeated";
 
-            if(Interop.HasRecentItemsDisplay())
-            {
-                ItemDisplayMethods.ShowItem(name, new ItemChangerSprite("ShopIcons.Marker_B"));
-            }
+            
+
             MsgUIDef msgUIDef = new MsgUIDef();
             msgUIDef.sprite = new ItemChangerSprite("ShopIcons.Marker_B");
             msgUIDef.name = new BoxedString(name);
             msgUIDef.SendMessage(MessageType.Corner, null);
+            TryDisplayOnRecentItems(msgUIDef, name);
+        }
+        private void TryDisplayOnRecentItems(MsgUIDef msgUIDef, string name)
+        {
+            if (Interop.HasRecentItemsDisplay())
+            {
+                RecentItemsDisplay.ItemDisplayMethods.ShowItemInternal(msgUIDef, name);
+            }
         }
     }
 
