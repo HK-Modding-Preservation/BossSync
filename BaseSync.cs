@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BossTrackerMod
 {
-    // Copied for the most part from MapSync mod
+    // Heavily based on BaseSync class from MapSync mod by wdghzym
     public class BaseSync
     {
         public readonly string MESSAGE_LABEL;

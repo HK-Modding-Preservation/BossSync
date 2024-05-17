@@ -4,6 +4,9 @@ using HutongGames.PlayMaker.Actions;
 using ItemChanger.UIDefs;
 using ItemChanger;
 using System.Collections.Generic;
+using UnityEngine;
+using Modding;
+using static Mono.Security.X509.X520;
 
 
 namespace BossTrackerMod
@@ -13,14 +16,20 @@ namespace BossTrackerMod
     {
         public BossSync() : base("BossTrackerMod-BossUnlock") { }
         internal List<string> displayedNames = new List<string>();
+        private bool hasRecentItems = false;
         protected override void OnEnterGame()
         {
             //Get button value
-            if (Menu.Instance.btButtons[0].Value == false)
+            if (!BossSyncMod.GS.SyncBosses)
             {
-                BossSyncMod.Instance.Log("Bosses Sync not enabled");
+                //BossSyncMod.Instance.Log("Bosses Sync not enabled");
                 return;
             }
+
+            hasRecentItems = ModHooks.GetMod("ItemSyncMod") is Mod;
+
+            if(hasRecentItems)
+                RecentItemsDisplay.Export.ShowItemChangerSprite("TEST", "ShopIcons.Marker_B");
 
             On.HutongGames.PlayMaker.Actions.SetPlayerDataBool.OnEnter += OnSetPlayerDataBoolAction;
             On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.OnEnter += OnSetPlayerDataIntAction;
@@ -45,13 +54,14 @@ namespace BossTrackerMod
         {
             orig(self);
 
-            //BossSyncMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
+            BossSyncMod.Instance.Log("Bool name: " + self.boolName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.boolName.Value.ToLower().Contains("kill") && self.value.Value;
             bool settingDefeatedTrue = self.boolName.Value.ToLower().Contains("defeat") && self.value.Value;
-            bool zoteRescued = self.boolName.Value.ToLower().Contains("zoterescued") && self.value.Value;
-            if (!settingKilledTrue && !settingDefeatedTrue && !zoteRescued) 
+            bool zoteRescued = self.boolName.Value.ToLower().Contains("rescued") && self.value.Value;
+            bool grimQuest = self.boolName.Value.ToLower().Contains("intown") && self.value.Value;
+            if (!settingKilledTrue && !settingDefeatedTrue && !zoteRescued && !grimQuest) 
             {
                 return;
             }
@@ -72,7 +82,7 @@ namespace BossTrackerMod
         private void OnSetPlayerDataIntAction(On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.orig_OnEnter orig, SetPlayerDataInt self)
         {
             orig(self);
-            //BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
+            BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
 
             // this hook handles most bosses
             bool settingKilledTrue = self.intName.Value.ToLower().Contains("defeat") && self.value.Value == 2;
@@ -97,7 +107,7 @@ namespace BossTrackerMod
         private void OnPersistentBoolAction(On.SceneData.orig_SaveMyState_PersistentBoolData orig, SceneData self, PersistentBoolData persistentBoolData)
         {
             orig(self, persistentBoolData);
-            //BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
+            BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
             string[] idNames = { "Mawlek Body", "Battle Scene", "Battle Scene v2", "Shiny Item-Pale_Ore-Colosseum",
                 "Camera Locks Boss", "Shiny Item Stand", "Zombie Beam Miner Rematch" };
 
@@ -146,72 +156,8 @@ namespace BossTrackerMod
             }
             else
             {
-                AddPersistentBoolItem(dataName, true, false);
-                switch (dataName)
-                {
-                    // Brooding Mawlek Cases
-                    case "Mawlek Body.Crossroads_09":
-                        PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
-                        DisplayItem("Mawlek");
-                        break;
-                    case "Battle Scene.Crossroads_09":
-                        break;
-
-                    // Soul Warrior
-                    case "Battle Scene v2.Ruins1_23":
-                        DisplayItem("Soul Warrior");
-                        break;
-
-                    // Oblobble
-                    case "Shiny Item-Pale_Ore-Colosseum.Room_Colosseum_Silver":
-                        PlayerData.instance.unlockedBossScenes.Add("Oblobbles Boss Scene");
-                        PlayerData.instance.SetBool("killedOblobble", true);
-                        DisplayItem("Oblobbles");
-                        break;
-
-                    // Broken Vessel
-                    case "Camera Locks Boss.Abyss_19":
-                        PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
-                        PlayerData.instance.SetBool("killedInfectedKnight", true);
-                        DisplayItem("Broken Vessel");
-                        break;
-
-                    // Hive knight
-                    // NOTE: the trigger for syncing is linked to picking up hiveblood not actually killing hive knight
-                    case "Shiny Item Stand.Hive_05":
-                        PlayerData.instance.unlockedBossScenes.Add("Hive Knight Boss Scene");
-                        PlayerData.instance.SetBool("killedHiveKnight", true);
-                        DisplayItem("Hive Knight");
-                        break;
-
-                    // Nosk
-                    case "Battle Scene.Deepnest_32":
-                        PlayerData.instance.unlockedBossScenes.Add("Nosk Boss Scene");
-                        PlayerData.instance.SetBool("killedMimicSpider", true);
-                        DisplayItem("Nosk");
-                        break;
-
-                    // Enraged Guardian
-                    case "Battle Scene.Mines_32":
-                        break;
-                    case "Zombie Beam Miner Rematch.Mines_32":
-                        PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian 2 Boss Scene");
-                        DisplayItem("Enraged Guardian");
-                        break;
-
-                    // Traitor Lord
-                    case "Battle Scene.Fungus3_23":
-                        PlayerData.instance.unlockedBossScenes.Add("Traitor Lord Boss Scene");
-                        PlayerData.instance.SetBool("killedTraitorLord", true);
-                        DisplayItem("Traitor Lord");
-                        break;
-
-                    default:
-                        break;
-                }
+               DataRecievedPersistentBool(dataName);
             }
-
-
            
         }
 
@@ -278,28 +224,125 @@ namespace BossTrackerMod
                     PlayerData.instance.unlockedBossScenes.Add("Mega Moss Charger Boss Scene");
                     DisplayItem("Mega Moss Charger");
                     break;
+
+                // Vengefly
                 case "giantFlyDefeated":
                     PlayerData.instance.unlockedBossScenes.Add("Gruz Boss Scene");
                     DisplayItem("Gruz Mother");
                     break;
+
+                // Mawlek
                 case "killedMawlek":
                     PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
                     DisplayItem("Mawlek");
                     break;
+
+                // Broken Vessel
                 case "killedInfectedKnight":
                     PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
                     DisplayItem("Broken Vessel");
                     break;
+
+                // Crystal Guardian
                 case "killedMegaBeamMiner":
                     PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian Boss Scene");
                     DisplayItem("Crystal Guardian");
                     break;
+
+                // Zote rescue
+                case "zoteRescuedBuzzer":
+                    DisplayItem("Zote Rescued Greenpath");
+                    break;
+                case "zoteRescuedDeepnest":
+                    DisplayItem("Zote Rescued Deepnest");
+                    break;
+
+                // Grimm quest
+                case "troupeInTown":
+                    DisplayItem("Grim Quest Started");
+                    break;
+                case "divineInTown":
+                    break;
+
+                // Bretta rescue
+                case "brettaRescued":
+                    DisplayItem("Bretta Rescued");
+                    break;
+
                 default:
                     DisplayItem(boolName);
                     break;
             }
             PlayerData.instance.SetBool(boolName, true);
             
+        }
+
+        private void DataRecievedPersistentBool(string dataName)
+        {
+            AddPersistentBoolItem(dataName, true, false);
+            switch (dataName)
+            {
+                // Brooding Mawlek Cases
+                case "Mawlek Body.Crossroads_09":
+                    PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
+                    DisplayItem("Mawlek");
+                    break;
+                case "Battle Scene.Crossroads_09":
+                    break;
+
+                // Soul Warrior
+                case "Battle Scene v2.Ruins1_23":
+                    DisplayItem("Soul Warrior");
+                    break;
+
+                // Oblobble
+                case "Shiny Item-Pale_Ore-Colosseum.Room_Colosseum_Silver":
+                    PlayerData.instance.unlockedBossScenes.Add("Oblobbles Boss Scene");
+                    PlayerData.instance.SetBool("killedOblobble", true);
+                    DisplayItem("Oblobbles");
+                    break;
+
+                // Broken Vessel
+                case "Camera Locks Boss.Abyss_19":
+                    PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
+                    PlayerData.instance.SetBool("killedInfectedKnight", true);
+                    DisplayItem("Broken Vessel");
+                    break;
+
+                // Hive knight
+                // NOTE: the trigger for syncing is linked to picking up hiveblood not actually killing hive knight
+                case "Shiny Item Stand.Hive_05":
+                    PlayerData.instance.unlockedBossScenes.Add("Hive Knight Boss Scene");
+                    PlayerData.instance.SetBool("killedHiveKnight", true);
+                    DisplayItem("Hive Knight");
+                    break;
+
+                // Nosk
+                case "Battle Scene.Deepnest_32":
+                    PlayerData.instance.unlockedBossScenes.Add("Nosk Boss Scene");
+                    PlayerData.instance.SetBool("killedMimicSpider", true);
+                    DisplayItem("Nosk");
+                    break;
+
+                // Enraged Guardian
+                case "Battle Scene.Mines_32":
+                    break;
+                case "Zombie Beam Miner Rematch.Mines_32":
+                    PlayerData.instance.unlockedBossScenes.Add("Crystal Guardian 2 Boss Scene");
+                    DisplayItem("Enraged Guardian");
+                    break;
+
+                // Traitor Lord
+                case "Battle Scene.Fungus3_23":
+                    PlayerData.instance.unlockedBossScenes.Add("Traitor Lord Boss Scene");
+                    PlayerData.instance.SetBool("killedTraitorLord", true);
+                    DisplayItem("Traitor Lord");
+                    break;
+
+                default:
+                    break;
+
+            }
         }
         
         // updates the persistent bool item (adds a new item if the item doesn't already exist)
@@ -402,25 +445,23 @@ namespace BossTrackerMod
 
             displayedNames.Add(name);
 
-            name += " Defeated";
-
-            
+            if(!name.ToLower().Contains("rescue") && !name.ToLower().Contains("quest"))
+                name += " Defeated";
 
             MsgUIDef msgUIDef = new MsgUIDef();
             msgUIDef.sprite = new ItemChangerSprite("ShopIcons.Marker_B");
             msgUIDef.name = new BoxedString(name);
             msgUIDef.SendMessage(MessageType.Corner, null);
-            TryDisplayOnRecentItems(msgUIDef, name);
-        }
-        private void TryDisplayOnRecentItems(MsgUIDef msgUIDef, string name)
-        {
-            if (Interop.HasRecentItemsDisplay())
+
+            if (hasRecentItems)
             {
                 RecentItemsDisplay.ItemDisplayMethods.ShowItemInternal(msgUIDef, name);
+                //RecentItemsDisplay.Export.ShowItemChangerSprite($"{name}\n from {dataReceivedEvent.From}", "ShopIcons.BenchPin");
+                //RecentItemsDisplay.Export.ShowItemChangerSprite(name, "ShopIcons.Marker_B");
             }
         }
     }
-
+     
 
 
 

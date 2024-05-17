@@ -63,7 +63,7 @@
 	  </Reference>
 	  <Reference Include="RecentItemsDisplay">  
 		  <HintPath>$(HollowKnightRefs)\Mods\RecentItemsDisplay\RecentItemsDisplay.dll</HintPath>
-	  </Reference>
+	  </Reference> 
 	  <Reference Include="ItemSync">
 		  <HintPath>$(HollowKnightRefs)\Mods\ItemSync\ItemSync.dll</HintPath>
 	  </Reference>
