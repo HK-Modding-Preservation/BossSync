@@ -28,9 +28,6 @@ namespace BossTrackerMod
 
             hasRecentItems = ModHooks.GetMod("ItemSyncMod") is Mod;
 
-            if(hasRecentItems)
-                RecentItemsDisplay.Export.ShowItemChangerSprite("TEST", "ShopIcons.Marker_B");
-
             On.HutongGames.PlayMaker.Actions.SetPlayerDataBool.OnEnter += OnSetPlayerDataBoolAction;
             On.HutongGames.PlayMaker.Actions.SetPlayerDataInt.OnEnter += OnSetPlayerDataIntAction;
             On.SceneData.SaveMyState_PersistentBoolData += OnPersistentBoolAction;
@@ -84,9 +81,10 @@ namespace BossTrackerMod
             orig(self);
             BossSyncMod.Instance.Log("Int variable name: " + self.intName.Value + ":" + self.value.Value);
 
-            // this hook handles most bosses
-            bool settingKilledTrue = self.intName.Value.ToLower().Contains("defeat") && self.value.Value == 2;
-            if (!settingKilledTrue)
+            // dream bosses & nailsmith
+            bool settingKilled = self.intName.Value.ToLower().Contains("defeat") && self.value.Value == 2;
+            bool settingNail = self.intName.Value.ToLower().Contains("naildamage");
+            if (!settingKilled && !settingNail)
             {
                 return;
             }
@@ -96,7 +94,7 @@ namespace BossTrackerMod
             {
                 // Sync player data for any defeated/killed bools
                 ItemSyncMod.ItemSyncMod.Connection.SendData(MESSAGE_LABEL,
-                        JsonConvert.SerializeObject("i." + self.intName.Value),
+                        JsonConvert.SerializeObject("i." + self.intName.Value + "." + self.value.Value),
                         toPlayerId);
                 BossSyncMod.Instance.LogDebug($"send to id[{toPlayerId}] name[{ItemSyncMod.ItemSyncMod.ISSettings.GetNicknames()[toPlayerId]}]");
 
@@ -163,8 +161,9 @@ namespace BossTrackerMod
 
         private void DataRecievedInt(string intName)
         {
-            
-            
+            int intValue = int.Parse(intName.Substring(intName.IndexOf('.') + 1));
+            intName = intName.Substring(0, intName.IndexOf('.'));
+
             switch (intName)
             {
                 // Special case for all dream warriors
@@ -198,8 +197,46 @@ namespace BossTrackerMod
                     PlayerData.instance.unlockedBossScenes.Add("Markoth Boss Scene");
                     DisplayItem("Markoth");
                     break;
+                case "nailDamage":
+                    PlayerData.instance.SetInt(intName, intValue);
+                    PlayerData.instance.SetBool("nailHoned", true);
+                    if (intValue == 9)
+                    {
+                        PlayerData.instance.SetInt("nailSmithUpgrades", 1);
+                        if (!PlayerData.instance.GetBool("equippedCharm_25"))
+                            PlayerData.instance.SetInt("beamDamage", 4);
+                        else
+                            PlayerData.instance.SetInt("beamDamage", 7);
+                    }
+                    else if (intValue == 13)
+                    {
+                        PlayerData.instance.SetInt("nailSmithUpgrades", 2);
+                        if (!PlayerData.instance.GetBool("equippedCharm_25"))
+                            PlayerData.instance.SetInt("beamDamage", 6);
+                        else
+                            PlayerData.instance.SetInt("beamDamage", 10);
+                    }
+                    else if (intValue == 17)
+                    {
+                        PlayerData.instance.SetInt("nailSmithUpgrades", 3);
+                        if (!PlayerData.instance.GetBool("equippedCharm_25"))
+                            PlayerData.instance.SetInt("beamDamage", 8);
+                        else
+                            PlayerData.instance.SetInt("beamDamage", 13);
+                    }
+                    else if (intValue == 21)
+                    {
+                        PlayerData.instance.SetInt("nailSmithUpgrades", 4);
+                        if (!PlayerData.instance.GetBool("equippedCharm_25"))
+                            PlayerData.instance.SetInt("beamDamage", 10);
+                        else
+                            PlayerData.instance.SetInt("beamDamage", 16);
+                    }
+                        
+                    DisplayItem("Nail Damage");
+                    break;
                 default:
-                    PlayerData.instance.SetInt(intName, 2);
+                    PlayerData.instance.SetInt(intName, intValue);
                     DisplayItem(intName);
                     break;
             }
@@ -240,7 +277,6 @@ namespace BossTrackerMod
                 // Broken Vessel
                 case "killedInfectedKnight":
                     PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
-                    DisplayItem("Broken Vessel");
                     break;
 
                 // Crystal Guardian
@@ -260,6 +296,8 @@ namespace BossTrackerMod
                 // Grimm quest
                 case "troupeInTown":
                     DisplayItem("Grim Quest Started");
+                    PlayerData.instance.SetBool("nightmareLanternAppeared", true);
+                    PlayerData.instance.SetBool("nightmareLanternLit", true);
                     break;
                 case "divineInTown":
                     break;
@@ -279,7 +317,7 @@ namespace BossTrackerMod
 
         private void DataRecievedPersistentBool(string dataName)
         {
-            AddPersistentBoolItem(dataName, true, false);
+            
             switch (dataName)
             {
                 // Brooding Mawlek Cases
@@ -304,8 +342,8 @@ namespace BossTrackerMod
 
                 // Broken Vessel
                 case "Camera Locks Boss.Abyss_19":
+                    if (!PlayerData.instance.GetBool("killedInfectedKnight")) return;
                     PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
-                    PlayerData.instance.SetBool("killedInfectedKnight", true);
                     DisplayItem("Broken Vessel");
                     break;
 
@@ -343,7 +381,9 @@ namespace BossTrackerMod
                     break;
 
             }
+            AddPersistentBoolItem(dataName, true, false);
         }
+
         
         // updates the persistent bool item (adds a new item if the item doesn't already exist)
         private void AddPersistentBoolItem(string data, bool activated, bool semiPersistent)
