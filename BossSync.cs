@@ -20,7 +20,7 @@ namespace BossTrackerMod
         protected override void OnEnterGame()
         {
             //Get button value
-            if (!BossSyncMod.GS.SyncBosses)
+            if (!BossSyncMod.GS.Bosses)
             {
                 //BossSyncMod.Instance.Log("Bosses Sync not enabled");
                 return;
@@ -108,6 +108,14 @@ namespace BossTrackerMod
             BossSyncMod.Instance.Log("Persistent Bool" + persistentBoolData.id + ":" + persistentBoolData.activated);
             string[] idNames = { "Mawlek Body", "Battle Scene", "Battle Scene v2", "Shiny Item-Pale_Ore-Colosseum",
                 "Camera Locks Boss", "Shiny Item Stand", "Zombie Beam Miner Rematch" };
+
+            // Some boss rooms need checks before they are sent
+            // to prevent accidental completion if someone leaves or dies
+            // before beating the boss
+
+            if (persistentBoolData.id == "Battle Scene" && persistentBoolData.sceneName == "Mines_32" && !PlayerData.instance.GetBool("defeatedMegaBeamMiner2")) return;
+            if (persistentBoolData.id == "Battle Scene" && persistentBoolData.sceneName == "Crossroads_09" && !PlayerData.instance.GetBool("killedMawlek")) return;
+            if (persistentBoolData.id == "Battle Scene" && persistentBoolData.sceneName == "Deepnest_32" && !PlayerData.instance.GetBool("killedNosk")) return;
 
             // Searches through all id names to find a match
             foreach (var id in idNames)
@@ -322,15 +330,17 @@ namespace BossTrackerMod
             {
                 // Brooding Mawlek Cases
                 case "Mawlek Body.Crossroads_09":
-                    PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
-                    DisplayItem("Mawlek");
                     break;
                 case "Battle Scene.Crossroads_09":
+                    PlayerData.instance.unlockedBossScenes.Add("Brooding Mawlek Boss Scene");
+                    DisplayItem("Mawlek");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Soul Warrior
                 case "Battle Scene v2.Ruins1_23":
                     DisplayItem("Soul Warrior");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Oblobble
@@ -338,6 +348,7 @@ namespace BossTrackerMod
                     PlayerData.instance.unlockedBossScenes.Add("Oblobbles Boss Scene");
                     PlayerData.instance.SetBool("killedOblobble", true);
                     DisplayItem("Oblobbles");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Broken Vessel
@@ -345,6 +356,7 @@ namespace BossTrackerMod
                     if (!PlayerData.instance.GetBool("killedInfectedKnight")) return;
                     PlayerData.instance.unlockedBossScenes.Add("Broken Vessel Boss Scene");
                     DisplayItem("Broken Vessel");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Hive knight
@@ -353,6 +365,7 @@ namespace BossTrackerMod
                     PlayerData.instance.unlockedBossScenes.Add("Hive Knight Boss Scene");
                     PlayerData.instance.SetBool("killedHiveKnight", true);
                     DisplayItem("Hive Knight");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Nosk
@@ -360,6 +373,7 @@ namespace BossTrackerMod
                     PlayerData.instance.unlockedBossScenes.Add("Nosk Boss Scene");
                     PlayerData.instance.SetBool("killedMimicSpider", true);
                     DisplayItem("Nosk");
+                    AddPersistentBoolItem(dataName, true, false);
                     break;
 
                 // Enraged Guardian
@@ -372,6 +386,7 @@ namespace BossTrackerMod
 
                 // Traitor Lord
                 case "Battle Scene.Fungus3_23":
+
                     PlayerData.instance.unlockedBossScenes.Add("Traitor Lord Boss Scene");
                     PlayerData.instance.SetBool("killedTraitorLord", true);
                     DisplayItem("Traitor Lord");
@@ -381,7 +396,7 @@ namespace BossTrackerMod
                     break;
 
             }
-            AddPersistentBoolItem(dataName, true, false);
+            
         }
 
         

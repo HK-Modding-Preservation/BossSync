@@ -7,8 +7,9 @@ namespace BossTrackerMod
     // More or less copied from homothety's RandomizerMod PoolSettings
     public class GlobalSettings
     {
-        public bool SyncBosses = true;
-        public bool SyncCompletion = true;
+        public bool Bosses = true;
+        public bool CompletionPercent = true;
+        public bool BreakableWallsAndFloors = true;
 
         private static readonly Dictionary<string, FieldInfo> fields = typeof(GlobalSettings)
             .GetFields(BindingFlags.Public | BindingFlags.Instance)

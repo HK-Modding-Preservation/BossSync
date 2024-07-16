@@ -15,7 +15,7 @@ namespace BossTrackerMod
 
         protected override void OnEnterGame()
         {
-            if (!BossSyncMod.GS.SyncCompletion)
+            if (!BossSyncMod.GS.CompletionPercent)
             {
                 //BossSyncMod.Instance.Log("Bosses Sync not enabled");
                 return;

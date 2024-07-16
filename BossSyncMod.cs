@@ -19,6 +19,7 @@ namespace BossTrackerMod
         internal Dictionary<string, Func<List<VanillaDef>>> Interops = new();
         public BossSync BossSync;
         public CompletionSync CompletionSync;
+        public BreakableSync BreakableSync;
         public BossSyncMod()
         {
             Instance = this;
@@ -29,6 +30,7 @@ namespace BossTrackerMod
 
             Interop.FindInteropMods();
             BossSync = new BossSync();
+            BreakableSync = new BreakableSync();
             //CompletionSync = new CompletionSync();
             Menu.Hook();
 
