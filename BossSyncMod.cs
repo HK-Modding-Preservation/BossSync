@@ -10,16 +10,17 @@ namespace BossTrackerMod
     {
         internal static BossSyncMod Instance;
         new public string GetName() => "BossSync";
-        public override string GetVersion() => "1.1.2.2";
+        public override string GetVersion() => "This mod is obsolete, install MapSyncMod and/or SpeedrunSync instead";
 
         public static GlobalSettings GS = new();
         public void OnLoadGlobal(GlobalSettings gs) => GS = gs;
         public GlobalSettings OnSaveGlobal() => GS;
 
         internal Dictionary<string, Func<List<VanillaDef>>> Interops = new();
-        public BossSync BossSync;
-        public CompletionSync CompletionSync;
-        public BreakableSync BreakableSync;
+        //public BossSync BossSync;
+        //public CompletionSync CompletionSync;
+        //public BreakableSync BreakableSync;
+        public SpeedrunSync SpeedrunSync;
         public BossSyncMod()
         {
             Instance = this;
@@ -29,9 +30,10 @@ namespace BossTrackerMod
             if (ModHooks.GetMod("ItemSyncMod") is not Mod) return;
 
             Interop.FindInteropMods();
-            BossSync = new BossSync();
-            BreakableSync = new BreakableSync();
+            //BossSync = new BossSync();
+            //BreakableSync = new BreakableSync();
             //CompletionSync = new CompletionSync();
+            SpeedrunSync = new SpeedrunSync();
             Menu.Hook();
 
             //On.HeroController.Update += Update;
